@@ -1,0 +1,65 @@
+{
+  "name": "@mansafi/sdk",
+  "version": "0.1.0",
+  "description": "TypeScript client for MansaFi: confidential transfers, agent accounts whose spend limits are enforced on-chain, and native x402 payments on Robinhood Chain.",
+  "license": "MIT",
+  "homepage": "https://mansafi.xyz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mansafi/sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mansafi/sdk/issues"
+  },
+  "author": "MansaFi <contact@mansafi.xyz> (https://mansafi.xyz)",
+  "keywords": [
+    "mansafi",
+    "robinhood-chain",
+    "privacy",
+    "confidential-transfers",
+    "zero-knowledge",
+    "ai-agents",
+    "agent-economy",
+    "x402",
+    "payments",
+    "usdg",
+    "stablecoin",
+    "neobank",
+    "web3",
+    "typescript",
+    "sdk"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false
+}
