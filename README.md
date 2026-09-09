@@ -13,3 +13,47 @@ npm install @mansafi/sdk
 ```
 
 Node 18 or newer, which is where global `fetch` and Web Crypto arrive. Browsers and edge runtimes work too, though a live key has no business being shipped to a browser.
+
+## First transfer
+
+```ts
+import { MansaFi } from "@mansafi/sdk";
+
+const mansafi = new MansaFi({ apiKey: process.env.MANSAFI_API_KEY! });
+
+// The amount is encrypted on-chain. What comes back confirms it settled and
+// pointedly does not repeat the figure you just sent.
+const transfer = await mansafi.transfers.create({
+  to: "@vendor",
+  amount: "125.00",
+  asset: "USDG",
+  memo: "Invoice #4471",
+});
+
+console.log(transfer.status, transfer.txHash);
+```
+
+Each `create` goes out with an `Idempotency-Key`, invented for you when you do not supply one. Supplying your own makes a retry safe even across a restart, since two calls sharing a key can only ever produce one transfer:
+
+```ts
+await mansafi.transfers.create(
+  { to: "@vendor", amount: "125.00" },
+  { idempotencyKey: `invoice-4471` },
+);
+```
+
+## Keys
+
+One bearer key per request, minted at **Dashboard → Developer → API Keys**. The prefix says which network it acts on and the client reads that for itself, so there is no mode switch to set wrongly:
+
+| Prefix | Network | What it touches |
+|---|---|---|
+| `hc_live_` | Mainnet, chain 4663 | Real USDG |
+| `hc_test_` | Testnet, chain 46630 | Nothing real |
+
+```ts
+const mansafi = new MansaFi({ apiKey: "hc_test_..." });
+mansafi.environment; // "test"
+```
+
+A key can move money. Keep it in the environment or a secrets manager, never in a commit, and replace it the moment you suspect it has been seen.
