@@ -68,3 +68,27 @@ The servers hold ciphertext and no key to open it. Two consequences fall directl
 ```ts
 const { balances } = await mansafi.accounts.balances({ decryptionProof });
 ```
+
+## Agents
+
+An agent gets a wallet and a mandate. The mandate is a smart-account constraint rather than a server-side rule, so overspending is not something the agent is discouraged from, it is something it cannot do, and a compromised backend cannot wave it through either:
+
+```ts
+const agent = await mansafi.agents.create({
+  name: "research-bot",
+  spendPolicy: {
+    dailyLimitUsdg: 500,
+    perTransactionLimitUsdg: 50,
+    allowedRecipients: ["api.market", "*.anthropic.com"],
+    assets: ["USDG"],
+    activeHours: "00:00-23:59",
+    hitlThresholdUsdg: 25, // at or above this, a person decides
+  },
+});
+
+// Work through whatever is waiting on you.
+const { pending } = await mansafi.agents.listPendingTransactions();
+for (const tx of pending) {
+  await mansafi.agents.approveTransaction(tx.transactionId);
+}
+```
