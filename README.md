@@ -57,3 +57,14 @@ mansafi.environment; // "test"
 ```
 
 A key can move money. Keep it in the environment or a secrets manager, never in a commit, and replace it the moment you suspect it has been seen.
+
+## What confidentiality means here
+
+The servers hold ciphertext and no key to open it. Two consequences fall directly out of that, and they shape how this SDK behaves:
+
+- No response carries a plaintext amount, including the response to the call that specified one. Reading a figure means decrypting it yourself.
+- `accounts.balances()` returns numbers only when handed a `decryptionProof` built on your side. Without one you learn which assets are non-empty, and nothing more.
+
+```ts
+const { balances } = await mansafi.accounts.balances({ decryptionProof });
+```
