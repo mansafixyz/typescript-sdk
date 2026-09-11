@@ -92,3 +92,36 @@ for (const tx of pending) {
   await mansafi.agents.approveTransaction(tx.transactionId);
 }
 ```
+
+## Webhooks
+
+Subscribe, then prove each delivery is ours before you act on it. Hand the verifier the body exactly as it arrived; a parsed and rebuilt object hashes to something else and will be rejected:
+
+```ts
+const webhook = await mansafi.webhooks.create({
+  url: "https://yourapp.com/hooks/mansafi",
+  events: ["transfer.confirmed", "agent.transaction.pending_approval"],
+});
+
+// Shown once. Store it before you move on.
+const secret = webhook.secret;
+
+// In the handler: verify and parse together. A bad signature throws
+// MansaFiWebhookVerificationError, so nothing unproven reaches the logic below.
+const event = await mansafi.webhooks.constructEvent({
+  payload: rawBody, // string or Uint8Array, untouched
+  signature: request.headers["x-mansafi-signature"],
+  secret,
+});
+
+switch (event.event) {
+  case "transfer.confirmed":
+    console.log(`settled: ${event.txHash}`);
+    break;
+  case "agent.transaction.pending_approval":
+    // get a person involved
+    break;
+}
+```
+
+If a plain boolean suits you better, `mansafi.webhooks.verifySignature({ payload, signature, secret })` answers true or false and throws nothing.
