@@ -125,3 +125,27 @@ switch (event.event) {
 ```
 
 If a plain boolean suits you better, `mansafi.webhooks.verifySignature({ payload, signature, secret })` answers true or false and throws nothing.
+
+## When things fail
+
+Failures arrive as typed errors, so handling them is branching rather than string matching:
+
+```ts
+import { MansaFiAPIError } from "@mansafi/sdk";
+
+try {
+  await mansafi.transfers.create({ to: "@vendor", amount: "999999.00" });
+} catch (err) {
+  if (err instanceof MansaFiAPIError) {
+    console.error(err.status, err.code); // 402 "insufficient_balance"
+    if (err.code === "insufficient_balance") {
+      // deal with it
+    }
+  }
+}
+```
+
+- `MansaFiAPIError`: the API answered with a non-2xx. Carries `status`, `code`, `body`, `requestId`.
+- `MansaFiConnectionError`: the call never arrived. Network, timeout, or cancellation.
+- `MansaFiWebhookVerificationError`: `constructEvent` could not vouch for a delivery.
+- `MansaFiError`: the ancestor of the rest. Catch this one to catch everything.
