@@ -149,3 +149,18 @@ try {
 - `MansaFiConnectionError`: the call never arrived. Network, timeout, or cancellation.
 - `MansaFiWebhookVerificationError`: `constructEvent` could not vouch for a delivery.
 - `MansaFiError`: the ancestor of the rest. Catch this one to catch everything.
+
+## Surface
+
+| Namespace | Methods |
+|---|---|
+| `mansafi.accounts` | `me`, `balances`, `listAgents` |
+| `mansafi.transfers` | `create`, `get`, `list` |
+| `mansafi.agents` | `create`, `getSpendPolicy`, `updateSpendPolicy`, `listPendingTransactions`, `approveTransaction`, `rejectTransaction` |
+| `mansafi.webhooks` | `create`, `list`, `delete`, `replay`, `deliveries`, `verifySignature`, `constructEvent` |
+
+The REST reference proper lives at [docs.mansafi.xyz](https://docs.mansafi.xyz).
+
+## License
+
+MIT
