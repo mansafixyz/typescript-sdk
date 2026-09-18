@@ -1,6 +1,6 @@
 export { MansaFi } from "./client.js";
 export type { MansaFiOptions, Environment } from "./client.js";
-export type { RequestConfig } from "./http.js";
+export type { RequestConfig } from "./transport.js";
 
 export {
   MansaFiError,
@@ -10,7 +10,7 @@ export {
 } from "./errors.js";
 export type { MansaFiErrorCode } from "./errors.js";
 
-export { verifyWebhookSignature } from "./webhook-signature.js";
+export { verifyWebhookSignature } from "./signature.js";
 
 export { Accounts } from "./resources/accounts.js";
 export { Transfers } from "./resources/transfers.js";

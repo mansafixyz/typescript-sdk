@@ -1,6 +1,6 @@
-import { fromWire } from "../case.js";
+import { fromWire } from "../wire-format.js";
 import { MansaFiWebhookVerificationError } from "../errors.js";
-import type { Transport, RequestConfig } from "../http.js";
+import type { Transport, RequestConfig } from "../transport.js";
 import type {
   CreateWebhookParams,
   WebhookDeliveryList,
@@ -8,7 +8,7 @@ import type {
   WebhookList,
   WebhookWithSecret,
 } from "../types.js";
-import { verifyWebhookSignature } from "../webhook-signature.js";
+import { verifyWebhookSignature } from "../signature.js";
 
 /**
  * Subscriptions, and the means to tell a real delivery from a forged one.

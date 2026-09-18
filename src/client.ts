@@ -1,4 +1,4 @@
-import { Transport } from "./http.js";
+import { Transport } from "./transport.js";
 import { MansaFiError } from "./errors.js";
 import { Accounts } from "./resources/accounts.js";
 import { Agents } from "./resources/agents.js";

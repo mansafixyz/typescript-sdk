@@ -1,4 +1,4 @@
-import { fromWire, toWire } from "./case.js";
+import { fromWire, toWire } from "./wire-format.js";
 import {
   MansaFiAPIError,
   MansaFiConnectionError,

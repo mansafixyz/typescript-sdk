@@ -1,4 +1,4 @@
-import type { Transport, RequestConfig } from "../http.js";
+import type { Transport, RequestConfig } from "../transport.js";
 import type { Account, AgentAccount, BalancesResponse } from "../types.js";
 
 /**
