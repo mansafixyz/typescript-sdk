@@ -150,6 +150,39 @@ try {
 - `MansaFiWebhookVerificationError`: `constructEvent` could not vouch for a delivery.
 - `MansaFiError`: the ancestor of the rest. Catch this one to catch everything.
 
+## Configuration
+
+Defaults that suit most callers, all of them replaceable:
+
+```ts
+const mansafi = new MansaFi({
+  apiKey: process.env.MANSAFI_API_KEY!,
+  baseUrl: "https://api.mansafi.xyz", // aim at a private gateway instead
+  timeoutMs: 30_000,                  // ceiling per request
+  maxRetries: 2,                      // transient failures only; 0 disables
+  fetch: customFetch,                 // your own implementation
+});
+```
+
+### Retrying
+
+A dropped connection, a `408`, a `429`, or any `5xx` earns another attempt, with the wait doubling each time and deferring to `Retry-After` when the server names one. Only calls that are safe to repeat qualify: a `GET` always is, and `transfers.create` qualifies because every attempt carries an `Idempotency-Key`, which is what makes a replay harmless.
+
+### Per-call overrides
+
+Every method takes a trailing options argument holding an `AbortSignal` and a timeout, so one slow call need not be governed by settings chosen for all of them:
+
+```ts
+const controller = new AbortController();
+
+const { transfers } = await mansafi.transfers.list(
+  { status: "pending" },
+  { signal: controller.signal, timeoutMs: 5_000 },
+);
+
+controller.abort(); // drops the request and anything queued behind it
+```
+
 ## Surface
 
 | Namespace | Methods |
